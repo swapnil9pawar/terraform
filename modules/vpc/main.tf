@@ -80,4 +80,76 @@ resource "aws_route_table_association" "public_subnet_az2_route_table_associatio
   subnet_id      = aws_subnet.public_subnet_az2.id
   route_table_id = aws_route_table.public_route_table.id
 }
+# Creating NAT Gateway (attached to a public subnet)
+resource "aws_eip" "nat" {
+  domain = "vpc"
+}
+
+resource "aws_nat_gateway" "main" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public_subnet_az1.id  # Using public subnet for NAT Gateway
+
+  tags = {
+    Name = "NAT Gateway"
+    Env  = var.env
+    Type = var.type
+  }
+}
+
+# Creating Private Subnet AZ1
+resource "aws_subnet" "private_subnet_az1" {
+  vpc_id                  = aws_vpc.eks_vpc.id
+  cidr_block              = var.private_subnet_az1_cidrr
+  availability_zone       = data.aws_availability_zones.available_zones.names[0]
+  map_public_ip_on_launch = false  # No public IP in private subnet
+
+  tags = {
+    Name = "Private Subnet AZ1"
+    Env  = var.env
+    Type = var.type
+  }
+}
+
+# Creating Private Subnet AZ2
+resource "aws_subnet" "private_subnet_az2" {
+  vpc_id                  = aws_vpc.eks_vpc.id
+  cidr_block              = var.private_subnet_az2_cidrr
+  availability_zone       = data.aws_availability_zones.available_zones.names[1]
+  map_public_ip_on_launch = false  # No public IP in private subnet
+
+  tags = {
+    Name = "Private Subnet AZ2"
+    Env  = var.env
+    Type = var.type
+  }
+}
+
+# Creating Private Route Table
+resource "aws_route_table" "private_route_table" {
+  vpc_id = aws_vpc.eks_vpc.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main.id  # Route internet traffic via NAT Gateway
+  }
+
+  tags = {
+    Name = "Private Route Table"
+    Env  = var.env
+    Type = var.type
+  }
+}
+
+# Associating Private Subnet AZ1 with Private Route Table
+resource "aws_route_table_association" "private_subnet_az1_route_table_association" {
+  subnet_id      = aws_subnet.private_subnet_az1.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+# Associating Private Subnet AZ2 with Private Route Table
+resource "aws_route_table_association" "private_subnet_az2_route_table_association" {
+  subnet_id      = aws_subnet.private_subnet_az2.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
 
