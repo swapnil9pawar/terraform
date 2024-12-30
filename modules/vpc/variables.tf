@@ -1,16 +1,19 @@
 # Environment
 variable "env" {
   type = string
+  default = "prod"
 }
 
 # Type
 variable "type" {
   type = string
+  default = "infra"
 }
 
 # Stack name
 variable "cluster_name" {
   type = string
+  default = eks-cluster
 }
 
 # VPC CIDR
