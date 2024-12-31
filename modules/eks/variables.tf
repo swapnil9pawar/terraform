@@ -63,3 +63,27 @@ variable "worker_node_count" {
   type = string
   description = "Worker node's count"
 }
+variable "addons" {
+  type = list(object({
+    name    = string
+    version = string
+  }))
+  default = [
+    {
+      name    = "kube-proxy"
+      version = "v1.30.7-eksbuild.2"
+    },
+    #{
+    #  name    = "vpc-cni"
+    #  version = "v1.12.6-eksbuild.2"
+    #},
+    {
+      name    = "coredns"
+      version = "v1.11.4-eksbuild.1"
+    },
+    {
+      name    = "aws-ebs-csi-driver"
+      version = "v1.30.0-eksbuild.1"
+    }
+  ]
+}
