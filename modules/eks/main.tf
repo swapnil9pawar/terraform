@@ -53,7 +53,7 @@ resource "aws_instance" "kubectl-server" {
   associate_public_ip_address = true
   subnet_id                   = var.public_subnet_az1_id
   vpc_security_group_ids      = [var.eks_security_group_id]
-
+  user_data = file("${path.module}/install_kubectl.sh")
   tags = {
     Name = "${var.cluster_name}-kubectl"
     Env  = var.env
