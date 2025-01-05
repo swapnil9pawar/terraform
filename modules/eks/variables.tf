@@ -63,27 +63,39 @@ variable "worker_node_count" {
   type = string
   description = "Worker node's count"
 }
-variable "addons" {
-  type = list(object({
-    name    = string
-    version = string
-  }))
-  default = [
-    {
-      name    = "kube-proxy"
-      version = "v1.30.7-eksbuild.2"
-    },
-    #{
-    #  name    = "vpc-cni"
-    #  version = "v1.12.6-eksbuild.2"
-    #},
-    {
-      name    = "coredns"
-      version = "v1.11.4-eksbuild.1"
-    },
-    {
-      name    = "aws-ebs-csi-driver"
-      version = "v1.30.0-eksbuild.1"
-    }
-  ]
+# Variables for addon versions with hardcoded values
+#variable "aws-ebs-csi-driver_version" {
+#  description = "Version of the VPC CSI addon"
+#  type        = string
+#  default     = "v1.30.0-eksbuild.1"  # Hardcoded value
+#}
+
+variable "coredns_version" {
+  description = "Version of the CoreDNS addon"
+  type        = string
+  default     = "v1.11.4-eksbuild.1" # Hardcoded value
+}
+
+variable "kube_proxy_version" {
+  description = "Version of the Kube-Proxy addon"
+  type        = string
+  default     = "v1.30.7-eksbuild.2" # Hardcoded value
+}
+# Variables for addon versions with hardcoded values
+#variable "aws-ebs-csi-driver_version" {
+#  description = "Version of the VPC CSI addon"
+#  type        = string
+#  default     = "v1.30.0-eksbuild.1"  # Hardcoded value
+#}
+
+variable "coredns_version" {
+  description = "Version of the CoreDNS addon"
+  type        = string
+  default     = "v1.11.4-eksbuild.1" # Hardcoded value
+}
+
+variable "kube_proxy_version" {
+  description = "Version of the Kube-Proxy addon"
+  type        = string
+  default     = "v1.30.7-eksbuild.2" # Hardcoded value
 }
